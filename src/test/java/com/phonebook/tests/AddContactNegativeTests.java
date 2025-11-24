@@ -1,5 +1,9 @@
 package com.phonebook.tests;
 
+import com.phonebook.data.ContactData;
+import com.phonebook.data.UserData;
+import com.phonebook.models.Contact;
+import com.phonebook.models.User;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -8,24 +12,24 @@ public class AddContactNegativeTests extends TestBase{
 
     @BeforeMethod
     public void precondition(){
-        clickOnLoginLink();
-        fillLoginRegisterForm(new User()
+        app.getUser().clickOnLoginLink();
+        app.getUser().fillLoginRegisterForm(new User()
                 .setEmail(UserData.email)
                 .setPassword(UserData.password));
-        clickOnLoginButton();
+        app.getUser().clickOnLoginButton();
     }
     @Test
     public void addContactWithInvalidPhone(){
-        clickOnAddLink();
-        fillContactForm(new Contact()
+        app.getContact().clickOnAddLink();
+        app.getContact().fillContactForm(new Contact()
                 .setName(ContactData.name)
                 .setLastName(ContactData.lastName)
                 .setPhone("123456789")
                 .setEmail(ContactData.email)
                 .setAddress(ContactData.address)
                 .setDescription(ContactData.description));
-        clickOnSaveButton();
-        Assert.assertTrue(isAlertPresent());
+        app.getContact().clickOnSaveButton();
+        Assert.assertTrue(app.getContact().isAlertPresent());
 
     }
 }

@@ -1,4 +1,4 @@
-package com.phonebook.tests;
+package com.phonebook.data;
 
 public class ContactData {
 

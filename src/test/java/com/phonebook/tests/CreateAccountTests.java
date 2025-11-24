@@ -1,4 +1,6 @@
 package com.phonebook.tests;
+import com.phonebook.data.UserData;
+import com.phonebook.models.User;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 public class CreateAccountTests extends TestBase{
@@ -6,29 +8,27 @@ public class CreateAccountTests extends TestBase{
 
     @Test(enabled = false)
     public void newUserRegisterPositiveTest(){
-
         //int i =(int)((System.currentTimeMillis()/1000)%3600);
-
         //click on Login Link
-        clickOnLoginLink();
+        app.getUser().clickOnLoginLink();
         //enter email
-        fillLoginRegisterForm(new User()
+        app.getUser().fillLoginRegisterForm(new User()
                 .setEmail(UserData.email)
                 .setPassword(UserData.password));
         //click on Registration button
-        clickOnRegistrationButton();
+        app.getUser().clickOnRegistrationButton();
         //assert SigOut button present
-        Assert.assertTrue(isSignOutButtonPresent());
+        Assert.assertTrue(app.getUser().isSignOutButtonPresent());
     }
 
     @Test
     public void newUserRegisterNegativeTest(){
-        clickOnLoginLink();
-        fillLoginRegisterForm(new User()
+        app.getUser().clickOnLoginLink();
+        app.getUser().fillLoginRegisterForm(new User()
                 .setEmail(UserData.email)
                 .setPassword(UserData.password));
-        clickOnRegistrationButton();
-        Assert.assertTrue(isAlertPresent());
+        app.getUser().clickOnRegistrationButton();
+        Assert.assertTrue(app.getUser().isAlertPresent());
     }
 
 }
