@@ -13,4 +13,8 @@ public class HomePageHelper extends BaseHelper {
     public boolean isHomeComponentPresent(){
         return isElementPresent(By.xpath("//div[2]//h1"));
     }
+
+    public void clickOnHomeLink() {
+        click(By.cssSelector("[href='/home']"));
+    }
 }
