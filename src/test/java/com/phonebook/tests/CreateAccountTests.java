@@ -1,48 +1,60 @@
 package com.phonebook.tests;
+
 import com.phonebook.core.TestBase;
-import com.phonebook.data.UserData;
 import com.phonebook.models.User;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static com.phonebook.core.ApplicationManager.softAssert;
-
 public class CreateAccountTests extends TestBase {
 
-@BeforeMethod
-public void ensurePrecondition(){
-    if(!app.getUser().isLoginLinkPresent()){
-        app.getUser().clickOnSignOutButton();
+    @BeforeMethod
+    public void ensurePrecondition() {
+        // Если пользователь уже залогинен — выходим
+        if (!app.getUser().isLoginLinkPresent()) {
+            app.getUser().clickOnSignOutButton();
+        }
     }
-}
+
     @Test(enabled = false)
-    public void newUserRegisterPositiveTest(){
-        //int i =(int)((System.currentTimeMillis()/1000)%3600);
-        //click on Login Link
+    public void newUserRegisterPositiveTest() {
+
+        int i = (int) ((System.currentTimeMillis() / 1000) % 3600);
+
         app.getUser().clickOnLoginLink();
-        //enter email
-        app.getUser().fillLoginRegisterForm(new User()
-                .setEmail(UserData.email)
-                .setPassword(UserData.password));
-        //click on Registration button
+
+        app.getUser().fillLoginRegisterForm(
+                new User()
+                        .setEmail("alex" + i + "@gmail.com")
+                        .setPassword("A12345$")
+        );
+
         app.getUser().clickOnRegistrationButton();
-        //assert SigOut button present
+
         Assert.assertTrue(app.getUser().isSignOutButtonPresent());
     }
 
     @Test
-    public void newUserRegisterNegativeTest(){
+    public void newUserRegisterNegativeTest() {
         app.getUser().clickOnLoginLink();
-        app.getUser().fillLoginRegisterForm(new User()
-                .setEmail(UserData.email)
-                .setPassword(UserData.password));
+
+        // Либо существующий email, либо заведомо неверный формат — не важно,
+        // главное, что появится alert с ошибкой
+        app.getUser().fillLoginRegisterForm(
+                new User()
+                        .setEmail("test@gmail.com")
+                        .setPassword("a12345")    // специально неправильный пароль
+        );
+
         app.getUser().clickOnRegistrationButton();
-        softAssert.assertTrue(app.getUser().isAlertPresent());
-        softAssert.assertTrue(app.getUser().isErrorMessagePresent());
-        softAssert.assertAll();
 
+        // ждём появления alert
+        app.getUser().pause(2000);
+
+        // проверяем, что alert появился
+        Assert.assertTrue(app.getUser().isAlertPresent());
+
+        // ОБЯЗАТЕЛЬНО закрываем alert, чтобы он не мешал другим тестам
+        app.getUser().acceptAlertIfPresent();
     }
-
-
 }

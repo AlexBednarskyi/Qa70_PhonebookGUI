@@ -13,35 +13,43 @@ import java.lang.reflect.Method;
 
 public class TestBase {
 
-    protected static ApplicationManager app = new ApplicationManager(System.getProperty("browser",Browser.CHROME.browserName()));
+    protected static ApplicationManager app =
+            new ApplicationManager(System.getProperty("browser", Browser.CHROME.browserName()));
 
-    Logger logger = LoggerFactory.getLogger(TestBase.class);
-
-    @BeforeMethod
-    public void startTest(Method method){
-        logger.info("Start test {}",method.getName());
-    }
+    protected Logger logger = LoggerFactory.getLogger(TestBase.class);
 
     @BeforeSuite
-    public void setUp(){
+    public void setUp() {
         app.init();
     }
 
-   @AfterMethod(enabled = true)
-   public void stopTest(ITestResult result){
-        if(result.isSuccess()){
-            logger.info("PASSED: {}", result.getMethod().getMethodName());
-        }else {
-            logger.error("FAILED: {} Screenshot: {}", result.getMethod()
-                    .getMethodName(),app.getContact()
-                    .takeScreenshot());
-        }
-        logger.info("Stop test");
-        logger.info("************************************");
-   }
-    @AfterSuite
-    public void tearDown(){
-        app.stop();
+    @BeforeMethod
+    public void startTest(Method method) {
+        logger.info("=== START TEST: {} ===", method.getName());
     }
 
+    @AfterMethod(alwaysRun = true)
+    public void stopTest(ITestResult result) {
+        String testName = result.getMethod().getMethodName();
+
+        if (result.isSuccess()) {
+            logger.info("PASSED: {}", testName);
+        } else {
+            String screenshotPath = app.getContact().takeScreenshot();
+            logger.error(
+                    "FAILED: {} | Screenshot: {}",
+                    testName,
+                    screenshotPath,
+                    result.getThrowable()
+            );
+        }
+
+        logger.info("=== END TEST: {} ===", testName);
+        logger.info("--------------------------------------------");
+    }
+
+    @AfterSuite(alwaysRun = true)
+    public void tearDown() {
+        app.stop();
+    }
 }

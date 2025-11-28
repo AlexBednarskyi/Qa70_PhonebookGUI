@@ -10,63 +10,50 @@ repositories {
 }
 
 dependencies {
-    implementation("org.seleniumhq.selenium:selenium-java:4.35.0")
-    implementation("org.testng:testng:7.11.0")
+    // Selenium + WebDriverManager
+    implementation "org.seleniumhq.selenium:selenium-java:4.35.0"
+    implementation "io.github.bonigarcia:webdrivermanager:6.3.3"
 
 
-    testImplementation("org.testng:testng:7.11.0")
-    implementation("io.github.bonigarcia:webdrivermanager:6.3.3")
+    implementation "ch.qos.logback:logback-classic:1.5.15"
 
-
-    implementation("ch.qos.logback:logback-classic:1.5.15")
+    testImplementation "org.testng:testng:7.11.0"
 }
 
 test {
     useTestNG()
-    if(project.hasProperty("browser")){
-        systemProperty 'browser',"${browser}"
+    if (project.hasProperty("browser")) {
+        systemProperty 'browser', "${browser}"
     }
 }
 
-task qa(type:Test){
-    //testClassesDirs = sourceSets.test.output.classesDirs
-    //classpath = sourceSets.test.runtimeClasspath
-    useTestNG()
-            {
-                suites'src/test/resources/testng.xml'
-           }
-    if(project.hasProperty("browser")){
-        systemProperty 'browser',"${browser}"
+task qa(type: Test) {
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    useTestNG {
+        suites 'src/test/resources/testng.xml'
+    }
+
+    if (project.hasProperty("browser")) {
+        systemProperty 'browser', "${browser}"
     }
 }
 
-//task qa1(type:Test){
-    //testClassesDirs = sourceSets.test.output.classesDirs
-    //classpath = sourceSets.test.runtimeClasspath
-    //useTestNG()
-            //{
-               // suites'src/test/resources/regression.xml'
-            //}
-    //if(project.hasProperty("browser")){
-      //  systemProperty 'browser',"${browser}"
-   // }
-//}
-
-
-
-def registerTask(String taskName,String suitePath){
-
-    tasks.register(taskName,Test){
+def registerTask(String taskName, String suitePath) {
+    tasks.register(taskName, Test) {
         testClassesDirs = sourceSets.test.output.classesDirs
         classpath = sourceSets.test.runtimeClasspath
-       useTestNG(){
+
+        useTestNG {
             suites suitePath
         }
-        if(project.hasProperty("browser")){
-            systemProperty 'browser',"${browser}"
-        }
 
+        if (project.hasProperty("browser")) {
+            systemProperty 'browser', "${browser}"
+        }
     }
 }
-registerTask('regression','src/test/resources/regression.xml')
-registerTask('negative','src/test/resources/negative.xml')
+
+registerTask('regression', 'src/test/resources/regression.xml')
+registerTask('negative',   'src/test/resources/negative.xml')
