@@ -23,12 +23,12 @@ public class UserHelper extends BaseHelper {
         click(By.xpath("//button[.='Registration']"));
     }
 
-    // метод, который нужен твоему тесту
+    
     public void clickOnSignOutButton() {
         click(By.xpath("//button[.='Sign Out']"));
     }
 
-    // удобный logout, можно вызывать из других мест
+    
     public void logout() {
         if (isSignOutButtonPresent()) {
             clickOnSignOutButton();
