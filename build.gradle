@@ -26,6 +26,14 @@ test {
         systemProperty 'browser', "${browser}"
     }
 }
+tasks.register('qa', Test) {
+    useTestNG() {
+        suites 'src/test/resources/testng.xml'
+    }
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+}
+
 
 task qa(type: Test) {
     testClassesDirs = sourceSets.test.output.classesDirs
