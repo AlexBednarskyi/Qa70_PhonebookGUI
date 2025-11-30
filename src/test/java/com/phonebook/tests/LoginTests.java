@@ -11,7 +11,7 @@ public class LoginTests extends TestBase {
 
     @BeforeMethod
     public void ensurePrecondition() {
-        // если уже залогинен – выходим из аккаунта
+        
         if (!app.getUser().isLoginLinkPresent()) {
             app.getUser().clickOnSignOutButton();
         }
@@ -22,7 +22,7 @@ public class LoginTests extends TestBase {
         app.getUser().clickOnLoginLink();
         app.getUser().fillLoginRegisterForm(new User()
                 .setEmail(UserData.email)
-                .setPassword(UserData.password));   // ВАЛИДНЫЙ логин/пароль
+                .setPassword(UserData.password));   
         app.getUser().clickOnLoginButton();
         Assert.assertTrue(app.getUser().isSignOutButtonPresent());
     }
@@ -31,7 +31,7 @@ public class LoginTests extends TestBase {
     public void loginNegativeWithoutEmailTest() {
         app.getUser().clickOnLoginLink();
         app.getUser().fillLoginRegisterForm(new User()
-                .setPassword(UserData.password));   // без email
+                .setPassword(UserData.password));   
         app.getUser().clickOnLoginButton();
 
         app.getUser().pause(2000);
