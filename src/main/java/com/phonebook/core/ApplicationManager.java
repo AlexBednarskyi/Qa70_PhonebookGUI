@@ -58,7 +58,6 @@ public class ApplicationManager {
         driver.manage().window().maximize();
         driver.get("https://telranedu.web.app/");
 
-        // ИНИЦИАЛИЗАЦИЯ ХЕЛПЕРОВ
         user = new UserHelper(driver);
         contact = new ContactHelper(driver);
         item = new ItemHelper(driver);
