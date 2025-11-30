@@ -18,7 +18,16 @@ dependencies {
 }
 
 test {
-    useTestNG()
+    useTestNG() {
+        suites 'src/test/resources/testng.xml'
+        useDefaultListeners = true     // включает testng-results.xml
+    }
+
+    reports {
+        junitXml.required.set(true)    // включает build/test-results/
+        html.required.set(false)
+    }
+
     if (project.hasProperty("browser")) {
         systemProperty 'browser', "${browser}"
     }
@@ -28,8 +37,14 @@ task qa(type: Test) {
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
 
-    useTestNG {
+    useTestNG() {
         suites 'src/test/resources/testng.xml'
+        useDefaultListeners = true
+    }
+
+    reports {
+        junitXml.required.set(true)
+        html.required.set(false)
     }
 
     if (project.hasProperty("browser")) {
