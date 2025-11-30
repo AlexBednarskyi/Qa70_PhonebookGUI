@@ -10,11 +10,8 @@ repositories {
 }
 
 dependencies {
-    // Selenium + WebDriverManager
     implementation "org.seleniumhq.selenium:selenium-java:4.35.0"
     implementation "io.github.bonigarcia:webdrivermanager:6.3.3"
-
-
     implementation "ch.qos.logback:logback-classic:1.5.15"
 
     testImplementation "org.testng:testng:7.11.0"
@@ -26,14 +23,6 @@ test {
         systemProperty 'browser', "${browser}"
     }
 }
-tasks.register('qa', Test) {
-    useTestNG() {
-        suites 'src/test/resources/testng.xml'
-    }
-    testClassesDirs = sourceSets.test.output.classesDirs
-    classpath = sourceSets.test.runtimeClasspath
-}
-
 
 task qa(type: Test) {
     testClassesDirs = sourceSets.test.output.classesDirs
@@ -48,20 +37,6 @@ task qa(type: Test) {
     }
 }
 
-def registerTask(String taskName, String suitePath) {
-    tasks.register(taskName, Test) {
-        testClassesDirs = sourceSets.test.output.classesDirs
-        classpath = sourceSets.test.runtimeClasspath
-
-        useTestNG {
-            suites suitePath
-        }
-
-        if (project.hasProperty("browser")) {
-            systemProperty 'browser', "${browser}"
-        }
-    }
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
-
-registerTask('regression', 'src/test/resources/regression.xml')
-registerTask('negative',   'src/test/resources/negative.xml')
