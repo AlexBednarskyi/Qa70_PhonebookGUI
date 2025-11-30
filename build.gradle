@@ -20,11 +20,11 @@ dependencies {
 test {
     useTestNG() {
         suites 'src/test/resources/testng.xml'
-        useDefaultListeners = true     // включает testng-results.xml
+        useDefaultListeners = true      
     }
 
     reports {
-        junitXml.required.set(true)    // включает build/test-results/
+        junitXml.required.set(true)     
         html.required.set(false)
     }
 
