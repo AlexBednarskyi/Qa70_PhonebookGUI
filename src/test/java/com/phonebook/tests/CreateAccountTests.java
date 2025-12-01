@@ -1,6 +1,7 @@
 package com.phonebook.tests;
 
 import com.phonebook.core.TestBase;
+import com.phonebook.data.MyDataProviders;
 import com.phonebook.models.User;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -10,7 +11,7 @@ public class CreateAccountTests extends TestBase {
 
     @BeforeMethod
     public void ensurePrecondition() {
-        // Если пользователь уже залогинен — выходим
+        
         if (!app.getUser().isLoginLinkPresent()) {
             app.getUser().clickOnSignOutButton();
         }
@@ -34,27 +35,45 @@ public class CreateAccountTests extends TestBase {
         Assert.assertTrue(app.getUser().isSignOutButtonPresent());
     }
 
+    
+    @Test(
+            enabled = false,
+            dataProvider = "validUserFromCsv",
+            dataProviderClass = MyDataProviders.class
+    )
+    public void newUserRegisterFromCsvTest(User user) {
+
+        app.getUser().clickOnLoginLink();
+
+        app.getUser().fillLoginRegisterForm(user);
+
+        app.getUser().clickOnRegistrationButton();
+
+        Assert.assertTrue(
+                app.getUser().isSignOutButtonPresent(),
+                "Кнопка Sign Out не найдена после регистрации (CSV)"
+        );
+    }
+
     @Test
     public void newUserRegisterNegativeTest() {
         app.getUser().clickOnLoginLink();
 
-        // Либо существующий email, либо заведомо неверный формат — не важно,
-        // главное, что появится alert с ошибкой
         app.getUser().fillLoginRegisterForm(
                 new User()
                         .setEmail("test@gmail.com")
-                        .setPassword("a12345")    // специально неправильный пароль
+                        .setPassword("a12345")    
         );
 
         app.getUser().clickOnRegistrationButton();
 
-        // ждём появления alert
+        
         app.getUser().pause(2000);
 
-        // проверяем, что alert появился
+        
         Assert.assertTrue(app.getUser().isAlertPresent());
 
-        // ОБЯЗАТЕЛЬНО закрываем alert, чтобы он не мешал другим тестам
+        
         app.getUser().acceptAlertIfPresent();
     }
 }
